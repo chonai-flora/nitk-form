@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.53cc9bf6.css",
+    "main.js": "/static/js/main.2a155152.js",
+    "static/js/787.b9dfa4e8.chunk.js": "/static/js/787.b9dfa4e8.chunk.js",
+    "static/media/分解アクセサリー.png": "/static/media/分解アクセサリー.da270e0f96a437f164d3.png",
+    "static/media/header.png": "/static/media/header.ad08fba2603240ee4a04.png",
+    "static/media/スライム.png": "/static/media/スライム.3d58493162442ef9e3f8.png",
+    "static/media/DNAストラップ.png": "/static/media/DNAストラップ.32b1b235ee0b5a29fc43.png",
+    "static/media/くるくるマグネット.png": "/static/media/くるくるマグネット.c3dd41fb57b2d2ddcb2c.png",
+    "static/media/ふしぎな水そう.png": "/static/media/ふしぎな水そう.34482fc2da0fb0f7ea22.png",
+    "static/media/球体ロボット.png": "/static/media/球体ロボット.692ceeab4d0753b0362c.png",
+    "index.html": "/index.html",
+    "main.53cc9bf6.css.map": "/static/css/main.53cc9bf6.css.map",
+    "main.2a155152.js.map": "/static/js/main.2a155152.js.map",
+    "787.b9dfa4e8.chunk.js.map": "/static/js/787.b9dfa4e8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.53cc9bf6.css",
+    "static/js/main.2a155152.js"
+  ]
+}
