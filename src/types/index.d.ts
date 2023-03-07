@@ -10,3 +10,5 @@ export interface User {
     title: string;
     schedule: string;
 }
+
+export type FormStatus = 'closed' | 'accepting' | 'succeeded' | 'failed';

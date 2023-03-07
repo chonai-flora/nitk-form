@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import FormStatus from '../types/form-status';
-import { Description } from '../types';
+import { Description, FormStatus } from '../types';
 import { Preparing, Loading, Succeeded, Failed } from './others';
 import { getCapacities, submit } from '../firebase/firebase-modules';
 
@@ -76,13 +75,13 @@ const descriptions: { [key: string]: Description } = {
 };
 
 const Form = () => {
-  const [formStatus, setStatus] = useState(FormStatus.closed);
+  const [formStatus, setStatus] = useState<FormStatus>('closed');
 
-  const [courseTitle, setTitle] = useState(initialTitles[0]);
-  const [courseSchedule, setSchedule] = useState(initialSchedules[0]);
-  const [userGrade, setGrade] = useState(initialGrades[0]);
-  const [userLastName, setLastName] = useState("");
-  const [userFirstName, setFirstName] = useState("");
+  const [courseTitle, setTitle] = useState<string>(initialTitles[0]);
+  const [courseSchedule, setSchedule] = useState<string>(initialSchedules[0]);
+  const [userGrade, setGrade] = useState<string>(initialGrades[0]);
+  const [userLastName, setLastName] = useState<string>("");
+  const [userFirstName, setFirstName] = useState<string>("");
   const [userEmail, setEmail] = useState("");
   const [userMemo, setMemo] = useState("");
   const [capacities, setCapacities] = useState({} as { [key: string]: number });
@@ -145,13 +144,13 @@ const Form = () => {
       : <span className='caution'>&#9888; 未回答もしくは無効な項目があります。</span>;
   };
 
-  if (formStatus === FormStatus.closed) {
+  if (formStatus === 'closed') {
     return <Preparing />;
   }
   else if (capacities == null || initialSchedules.some((schedule) => isNaN(capacities[schedule]))) {
     return <Loading />;
   }
-  else if (formStatus === FormStatus.succeeded) {
+  else if (formStatus === 'succeeded') {
     return <Succeeded
       name={`${userLastName} ${userFirstName}`}
       grade={userGrade}
@@ -160,7 +159,7 @@ const Form = () => {
       schedule={courseSchedule}
     />;
   }
-  else if (formStatus === FormStatus.failed) {
+  else if (formStatus === 'failed') {
     return <Failed />;
   }
 

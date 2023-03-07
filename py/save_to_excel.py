@@ -9,22 +9,24 @@ from openpyxl.styles import Font, PatternFill
 from openpyxl.styles.borders import Border, Side
 
 
-def fetch_ref(collection):
-    cred = credentials.Certificate('py/credentials.json')
-    firebase_admin.initialize_app(cred)
+cred = credentials.Certificate('py/credentials.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
-    db = firestore.client()
+
+def fetch_ref(collection):
     return db.collection(collection)
 
 
 def main():
     date = datetime.datetime.now()
-    headers = ['{0:%Y/%m/%d %H:%M更新} (自動更新)'.format(date), '時間', '名前', '学年', 'メールアドレス', '備考', '受付完了時刻']
+    headers = ['{0:%Y/%m/%d %H:%M更新}'.format(date), '時間', '名前', '学年', 'メールアドレス', '備考', '受付完了時刻']
     titles = ['スライム', 'DNAストラップ', 'くるくるマグネット', 'ふしぎな水そう', '球体ロボットでプログラミング体験', '電卓を分解して自分だけのアクセサリーを作ろう']
     keyOrder = ['title', 'schedule', 'name', 'grade', 'email', 'memo', 'submitted_at']
 
     # collectionの取得
-    applicants_ref = fetch_ref('door-applicants')
+    adv_ref = fetch_ref('adv-applicants')
+    door_ref = fetch_ref('door-applicants')
 
     # フォント・罫線・カラー
     font = Font(name='游ゴシック')
@@ -43,13 +45,22 @@ def main():
 
         # ヘッダーの書き込み
         for col, header in enumerate(headers):
-            cell = ws.cell(row=1, column=col+1,value=header)
+            cell = ws.cell(row=1, column=col+1, value=header)
             cell.font = font
             cell.fill = fill
             cell.border = Border(top=thin, bottom=thin, left=thin, right=thin)
 
         # DBにアクセス
-        docs = applicants_ref.document(title).get().to_dict()
+        adv_docs = adv_ref.document(title).get().to_dict()
+        door_docs = door_ref.document(title).get().to_dict()
+
+        # データを結合
+        docs = {}
+        for schedule in (adv_docs.keys() | door_docs.keys()):
+            adv = adv_docs.get(schedule)
+            door = door_docs.get(schedule)
+            
+            docs.setdefault(schedule, adv + door)
         ordered_docs = collections.OrderedDict(sorted(docs.items()))
         
         row = 2
@@ -80,7 +91,8 @@ def main():
                     elif key == 'name':
                         border = Border(top=thin, bottom=thin, left=thin, right=dashed)
                     elif key == 'submitted_at':
-                        user[key] = str(user[key])
+                        submitted_at = datetime.datetime.fromtimestamp(user[key].timestamp())
+                        user[key] = '{0:%Y-%m-%d %H:%M}'.format(submitted_at)
                         border = Border(top=thin, bottom=thin, left=dashed, right=thin)
 
                     cell = ws.cell(row=row, column=col+1, value=user[key])
@@ -94,7 +106,7 @@ def main():
         ws.cell(row=row-1, column=1).border = Border(bottom=thin, left=thin, right=thin)
 
     # 保存
-    wb.save('py/applicants/当日申込者リスト.xlsx')
+    wb.save('py/applicants/最終申込者リスト.xlsx')
 
 
 if __name__ == '__main__':

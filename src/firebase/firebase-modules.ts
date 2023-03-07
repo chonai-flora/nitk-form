@@ -1,8 +1,8 @@
 import firebaseApp from '.';
-import FormStatus from '../types/form-status';
+import { FormStatus } from '../types';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import {
-  doc, collection, getDocs, setDoc, updateDoc, Timestamp, getFirestore
+  doc, collection, getDocs, setDoc, updateDoc, Timestamp, getFirestore, DocumentData
 } from 'firebase/firestore';
 
 // Initialize firestore
@@ -19,19 +19,19 @@ const appCheck = initializeAppCheck(firebaseApp, {
 });
 
 // Get capacities of the course
-const getCapacities = async (title: string) => {
+const getCapacities = async (title: string): Promise<DocumentData | null> => {
   const ref = collection(db, 'door-capacities');
   const snapshot = await getDocs(ref);
   const doc = snapshot.docs.find((doc) => doc.id === title);
   return snapshot.empty
     ? null
-    : doc?.data();
-}
+    : doc?.data()!;
+};
 
 // Submit applicant's information
-const submit = async (title: string, schedule: string, grade: string, name: string, email: string, memo: string) => {
+const submit = async (title: string, schedule: string, grade: string, name: string, email: string, memo: string): Promise<FormStatus> => {
   const status = await updateCapacities(title, schedule);
-  if (status === FormStatus.failed) {
+  if (status === 'failed') {
     return status;
   }
   try {
@@ -96,15 +96,15 @@ const submit = async (title: string, schedule: string, grade: string, name: stri
   } catch (err) {
     console.log("Failed to submit.");
     console.log(err);
-    return FormStatus.failed;
+    return 'failed';
   }
 };
 
 // Reduce the capacity by one
-const updateCapacities = async (title: string, schedule: string) => {
+const updateCapacities = async (title: string, schedule: string): Promise<FormStatus> => {
   const capacities = await getCapacities(title);
   if (capacities![schedule] <= 0) {
-    return FormStatus.failed;
+    return 'failed';
   }
   
   capacities![schedule] = capacities![schedule] - 1;
@@ -112,10 +112,10 @@ const updateCapacities = async (title: string, schedule: string) => {
     const ref = doc(collection(db, 'door-capacities'), title);
     await setDoc(ref, { ...(capacities!) });
 
-    return FormStatus.succeeded;
+    return 'succeeded';
   } catch (err) {
     console.log(err);
-    return FormStatus.failed;
+    return 'failed';
   }
 };
 
