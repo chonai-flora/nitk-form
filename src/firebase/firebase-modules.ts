@@ -11,7 +11,7 @@ const db = getFirestore(firebaseApp);
 // Pass your reCAPTCHA v3 site key (public key) to activate(). Make sure this
 // key is the counterpart to the secret key you set in the Firebase console.
 const appCheck = initializeAppCheck(firebaseApp, {
-  provider: new ReCaptchaV3Provider(''),
+  provider: new ReCaptchaV3Provider('6LcyXlEkAAAAAF4AG1iMPN61XCPERsAFYOBzPSnv'),
 
   // Optional argument. If true, the SDK automatically refreshes App Check
   // tokens as needed.
@@ -49,47 +49,7 @@ const submit = async (title: string, schedule: string, grade: string, name: stri
         submitted_at: Timestamp.fromDate(date)
       }
     );
-
-    switch (schedule) {
-      case '10:30':
-        await updateDoc(doc(ref, title), { '10:30': users });
-        break;
-      case '11:00':
-        await updateDoc(doc(ref, title), { '11:00': users });
-        break;
-      case '11:30':
-        await updateDoc(doc(ref, title), { '11:30': users });
-        break;
-      case '12:00':
-        await updateDoc(doc(ref, title), { '12:00': users });
-        break;
-      case '12:30':
-        await updateDoc(doc(ref, title), { '12:30': users });
-        break;
-      case '13:00':
-        await updateDoc(doc(ref, title), { '13:00': users });
-        break;
-      case '13:30':
-        await updateDoc(doc(ref, title), { '13:30': users });
-        break;
-      case '14:00':
-        await updateDoc(doc(ref, title), { '14:00': users });
-        break;
-      case '14:30':
-        await updateDoc(doc(ref, title), { '14:30': users });
-        break;
-      case '15:00':
-        await updateDoc(doc(ref, title), { '15:00': users });
-        break;
-      case '15:30':
-        await updateDoc(doc(ref, title), { '15:30': users });
-        break;
-      case '16:00':
-        await updateDoc(doc(ref, title), { '16:00': users });
-        break;
-      default:
-        break;
-    }
+    await updateDoc(doc(ref, title), { [schedule]: users });
     
     console.log("Successfully submitted.");
     return status;

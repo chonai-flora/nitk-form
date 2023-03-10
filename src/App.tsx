@@ -1,4 +1,3 @@
-import Helmet from 'react-helmet';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.css';
@@ -10,8 +9,6 @@ const App = () => {
     <div>
       <div className='app'>
         <header className='header'>
-          <Helmet title="熊本高専講座申し込みフォーム" />
-
           <h1>
             熊本高専わいわい工作わくわく実験ひろば<br />
             申し込みフォーム
