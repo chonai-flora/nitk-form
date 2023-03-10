@@ -84,7 +84,7 @@ const Form = () => {
   const [userFirstName, setFirstName] = useState<string>("");
   const [userEmail, setEmail] = useState("");
   const [userMemo, setMemo] = useState("");
-  const [capacities, setCapacities] = useState({} as { [key: string]: number });
+  const [capacities, setCapacities] = useState<{ [key: string]: number }>({});
   useEffect(() => {
     const fetchData = async () => {
       const result = await getCapacities(courseTitle);
